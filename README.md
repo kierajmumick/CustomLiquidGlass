@@ -1,0 +1,2 @@
+# CustomLiquidGlass
+I've been reverse engineering Apple's Liquid Glass effects. This project provides some tools you can use to create custom liquid glass effects, and contains some demos that show how to use those tools.
