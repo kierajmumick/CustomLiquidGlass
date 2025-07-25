@@ -34,52 +34,28 @@ struct GlassChromaticAberrationViewDemo: View {
           .frame(maxWidth: .infinity)
         }
         .overlay(alignment: .bottom) {
-          VStack(alignment: .leading) {
-            HStack {
-              Text("Ovalization")
-              Spacer()
-              Text("\(ovalization)")
-            }
-            Slider(value: $ovalization, in: 0...5)
+          ScrollView {
+            VStack(alignment: .leading) {
+              SectionHeader(title: "Chromatic Aberration Filter")
+              SliderRow(title: "Intensity", value: $intensity, range: 0...200)
 
-            HStack {
-              Text("Height")
-              Spacer()
-              Text("\(height)")
-            }
-            Slider(value: $height, in: 0...100)
+              SectionHeader(title: "Glass Properties")
+              SliderRow(title: "Height", value: $height, range: 0...100)
+              SliderRow(title: "Curvature", value: $curvature, range: 0...1)
+              SliderRow(title: "Angle", value: $angle, range: 0...Double.pi * 2 * 10) {
+                "\($0 / Double.pi)π"
+              }
 
-            HStack {
-              Text("Curvature")
-              Spacer()
-              Text("\(curvature)")
-            }
-            Slider(value: $curvature, in: 0...1)
+              SectionHeader(title: "SDFElementLayer Properties")
+              SliderRow(title: "Ovalization", value: $ovalization, range: 0...5)
+              SliderRow(title: "Corner Radius", value: $cornerRadius, range: 0...100)
 
-            HStack {
-              Text("Angle")
-              Spacer()
-              Text("\(angle / Double.pi)π")
             }
-            Slider(value: $angle, in: 0...Double.pi * 2 * 10)
-
-            HStack {
-              Text("Intensity")
-              Spacer()
-              Text("\(intensity)")
-            }
-            Slider(value: $intensity, in: 0...200)
-
-            HStack {
-              Text("Corner Radius")
-              Spacer()
-              Text("\(cornerRadius)")
-            }
-            Slider(value: $cornerRadius, in: 0...100)
+            .padding(24)
+            .frame(maxWidth: .infinity)
           }
-          .padding(24)
-          .frame(maxWidth: .infinity)
           .glassEffect(.regular, in: .rect(cornerRadius: 48))
+          .frame(maxHeight: 450)
           .padding(12)
         }
         .ignoresSafeArea()
