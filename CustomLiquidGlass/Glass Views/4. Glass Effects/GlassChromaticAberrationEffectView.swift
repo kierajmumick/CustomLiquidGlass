@@ -29,11 +29,11 @@ struct GlassChromaticAberrationEffectView: UIViewRepresentable {
   /// The corner radius of the view as viewed by the user.
   let cornerRadius: CGFloat
 
-  func makeUIView(context: Context) -> ChromaticAberrationView {
-    ChromaticAberrationView(frame: .zero)
+  func makeUIView(context: Context) -> _GlassChromaticAberrationEffectView {
+    _GlassChromaticAberrationEffectView(frame: .zero)
   }
 
-  func updateUIView(_ uiView: ChromaticAberrationView, context: Context) {
+  func updateUIView(_ uiView: _GlassChromaticAberrationEffectView, context: Context) {
     uiView.cornerRadius = cornerRadius
 
     context.animate {
@@ -46,7 +46,7 @@ struct GlassChromaticAberrationEffectView: UIViewRepresentable {
   }
 }
 
-class ChromaticAberrationView: UIView {
+class _GlassChromaticAberrationEffectView: UIView {
 
   var height: CGFloat {
     get { layer.value(forKeyPath: "sublayers.sdfLayer.effect.height") as? CGFloat ?? 0 }
