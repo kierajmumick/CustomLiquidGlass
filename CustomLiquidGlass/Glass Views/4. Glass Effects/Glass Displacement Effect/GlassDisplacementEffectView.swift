@@ -26,13 +26,15 @@ struct GlassDisplacementEffectView: UIViewRepresentable {
   }
 
   func updateUIView(_ uiView: _GlassDisplacementEffectView, context: Context) {
-    uiView.cornerRadius = cornerRadius
-    uiView.blur = blur
-    uiView.brightness = brightness
-    uiView.displacement = inputAmount
-    uiView.ovalization = ovalization
-    uiView.height = height
-    uiView.angle = angle
-    uiView.curvature = curvature
+    context.animate {
+      uiView.cornerRadius = cornerRadius
+      uiView.blur = blur
+      uiView.brightness = brightness
+      uiView.displacement = inputAmount
+      uiView.ovalization = ovalization
+      uiView.height = height
+      uiView.angle = angle
+      uiView.curvature = curvature
+    }
   }
 }
