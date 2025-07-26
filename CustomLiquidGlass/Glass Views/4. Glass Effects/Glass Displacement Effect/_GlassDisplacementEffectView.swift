@@ -3,13 +3,7 @@
 
 import UIKit
 
-class _GlassChromaticAberrationEffectView: UIView {
-
-  var intensity: CGFloat {
-    get { castedLayer.intensity }
-    set { castedLayer.intensity = newValue }
-  }
-
+class _GlassDisplacementEffectView: UIView {
   var height: CGFloat {
     get { castedLayer.height }
     set { castedLayer.height = newValue }
@@ -25,9 +19,24 @@ class _GlassChromaticAberrationEffectView: UIView {
     set { castedLayer.angle = newValue }
   }
 
+  var blur: CGFloat {
+    get { castedLayer.blur }
+    set { castedLayer.blur = newValue }
+  }
+
+  var brightness: CGFloat {
+    get { castedLayer.brightness }
+    set { castedLayer.brightness = newValue }
+  }
+
   var cornerRadius: CGFloat {
     get { castedLayer.cornerRadius }
     set { castedLayer.cornerRadius = newValue }
+  }
+
+  var displacement: CGFloat {
+    get { castedLayer.displacement }
+    set { castedLayer.displacement = newValue }
   }
 
   var ovalization: CGFloat {
@@ -35,10 +44,11 @@ class _GlassChromaticAberrationEffectView: UIView {
     set { castedLayer.ovalization = newValue }
   }
 
-  override class var layerClass: AnyClass { _GlassChromaticAberrationEffectLayer.self }
+  override class var layerClass: AnyClass { _GlassDisplacementEffectLayer.self }
 
-  private var castedLayer: _GlassChromaticAberrationEffectLayer {
-    layer as! _GlassChromaticAberrationEffectLayer
+  // MARK: Private
+
+  private var castedLayer: _GlassDisplacementEffectLayer {
+    layer as! _GlassDisplacementEffectLayer
   }
 }
-

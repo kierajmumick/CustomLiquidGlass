@@ -3,16 +3,19 @@
 
 import QuartzCore
 
-class _GlassChromaticAberrationEffectLayer: CABackdropLayer {
+class _GlassDisplacementEffectLayer: CABackdropLayer {
 
   // MARK: Lifecycle
 
   override init!() {
     super.init()
+
+    setUpBlurFilter()
+    setUpColorBrightnessFilter()
     setUpGlassDisplacementEffect()
     setUpSDFLayer()
     setUpSDFElementLayer()
-    setUpChromaticAberrationMap()
+    setUpDisplacementFilter()
     setUpLayer()
   }
 
@@ -43,19 +46,26 @@ class _GlassChromaticAberrationEffectLayer: CABackdropLayer {
     set { setValue(newValue, forKeyPath: "sublayers.sdfLayer.effect.angle") }
   }
 
-  override var cornerRadius: CGFloat {
-    get { sdfElementLayer.cornerRadius }
+  var blur: CGFloat {
+    get { value(forKeyPath: "filters.blur.inputRadius") as? CGFloat ?? 0 }
+    set { setValue(newValue, forKeyPath: "filters.blur.inputRadius") }
+  }
 
-    set {
-      sdfElementLayer.cornerRadius = newValue
-      sdfLayer.cornerRadius = newValue
-      super.cornerRadius = newValue
+  var brightness: CGFloat {
+    get { value(forKeyPath: "filters.colorBrightness.inputAmount") as? CGFloat ?? 0 }
+    set { setValue(newValue, forKeyPath: "filters.colorBrightness.inputAmount") }
+  }
+
+  override var cornerRadius: CGFloat {
+    didSet {
+      sdfElementLayer.cornerRadius = cornerRadius
+      sdfLayer.cornerRadius = cornerRadius
     }
   }
 
-  var intensity: CGFloat {
-    get { value(forKeyPath: "filters.chromaticAberrationMap.inputAmount") as? CGFloat ?? 0 }
-    set { setValue(newValue, forKeyPath: "filters.chromaticAberrationMap.inputAmount")}
+  var displacement: CGFloat {
+    get { value(forKeyPath: "filters.displacementMap.inputAmount") as? CGFloat ?? 0 }
+    set { setValue(newValue, forKeyPath: "filters.displacementMap.inputAmount")}
   }
 
   var ovalization: CGFloat {
@@ -80,12 +90,20 @@ class _GlassChromaticAberrationEffectLayer: CABackdropLayer {
   /// The CAFilter that applies the liquid glass effect from a displacement map.
   ///
   /// The displacement map comes from `sdfLayer`.
-  private let chromaticAberrationFilter = CAFilter(type: "chromaticAberrationMap")!
+  private let displacementFilter = CAFilter(type: "displacementMap")!
+
+  /// The CAFilter that applies the blur effect.
+  private let blurFilter = CAFilter(type: "gaussianBlur")!
+
+  /// The CAFilter that applies the color brightness effect.
+  private let colorBrightnessFilter = CAFilter(type: "colorBrightness")!
 
   private func setUpLayer() {
     setValue(true, forKey: "windowServerAware")
     filters = [
-      chromaticAberrationFilter,
+      blurFilter,
+      colorBrightnessFilter,
+      displacementFilter,
     ]
   }
 
@@ -110,8 +128,19 @@ class _GlassChromaticAberrationEffectLayer: CABackdropLayer {
     sdfLayer.addSublayer(sdfElementLayer)
   }
 
-  private func setUpChromaticAberrationMap() {
-    chromaticAberrationFilter.setName("chromaticAberrationMap")
-    chromaticAberrationFilter.setValue("sdfLayer", forKey: "inputSourceSublayerName")
+  private func setUpBlurFilter() {
+    blurFilter.setName("blur")
+    blurFilter.setValue(true, forKey: "inputNormalizeEdges")
+    blurFilter.setValue(blur, forKey: "inputRadius")
+  }
+
+  private func setUpColorBrightnessFilter() {
+    colorBrightnessFilter.setName("colorBrightness")
+    colorBrightnessFilter.setValue(brightness, forKey: "inputAmount")
+  }
+
+  private func setUpDisplacementFilter() {
+    displacementFilter.setName("displacementMap")
+    displacementFilter.setValue("sdfLayer", forKey: "inputSourceSublayerName")
   }
 }

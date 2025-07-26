@@ -1,5 +1,5 @@
 // Created by kieraj_mumick on 7/26/25.
-// Copyright © 2025 Airbnb Inc. All rights reserved.
+// Copyright © 2025 Kieraj Mumick Inc. All rights reserved.
 
 import QuartzCore
 

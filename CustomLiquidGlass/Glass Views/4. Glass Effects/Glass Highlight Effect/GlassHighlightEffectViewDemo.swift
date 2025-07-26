@@ -4,7 +4,7 @@
 import SwiftUI
 
 struct GlassHighlightEffectViewDemo: View {
-  var body:s some View {
+  var body: some View {
     NavigationStack {
       ZStack(alignment: .top) {
         HStack(spacing: 0) {
