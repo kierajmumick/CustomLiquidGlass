@@ -2,7 +2,6 @@
 // Copyright © 2025 Kieraj Mumick Inc. All rights reserved.
 
 import SwiftUI
-import UIKit
 
 struct GlassHighlightEffectView: UIViewRepresentable {
   let ovalization: CGFloat
@@ -18,13 +17,15 @@ struct GlassHighlightEffectView: UIViewRepresentable {
   }
 
   func updateUIView(_ uiView: _GlassHighlightEffectView, context: Context) {
-    uiView.ovalization = ovalization
-    uiView.cornerRadius = cornerRadius
+    context.animate {
+      uiView.ovalization = ovalization
+      uiView.cornerRadius = cornerRadius
 
-    uiView.height = height
-    uiView.curvature = curvature
-    uiView.angle = angle
-    uiView.spread = spread
-    uiView.amount = amount
+      uiView.height = height
+      uiView.curvature = curvature
+      uiView.angle = angle
+      uiView.spread = spread
+      uiView.amount = amount
+    }
   }
 }
