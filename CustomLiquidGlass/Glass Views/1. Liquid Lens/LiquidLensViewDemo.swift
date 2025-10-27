@@ -24,10 +24,6 @@ struct LiquidLensViewDemo: View {
               Text("Is Lifted")
             }
 
-            Toggle(isOn: $useGlassWhenResting) {
-              Text("Use Glass when Resting")
-            }
-
             Toggle(isOn: $scaleWhenLifted) {
               Text("Scale when Lifted")
             }
@@ -42,8 +38,7 @@ struct LiquidLensViewDemo: View {
             LiquidLensView(
               isLifted: isLifted,
               warpsContentBelow: warpsContentBelow,
-              restingBackgroundColor: restingBackgroundColor,
-              useGlassWhenResting: useGlassWhenResting)
+              restingBackgroundColor: restingBackgroundColor)
             .offset(
               x: offset.width,
               y: offset.height
@@ -68,8 +63,6 @@ struct LiquidLensViewDemo: View {
                   lastOffset = offset
                 }
             )
-
-
           }
         }
         .animation(.spring, value: isLifted)
@@ -91,7 +84,6 @@ struct LiquidLensViewDemo: View {
   @State private var isLifted = false
   @State private var warpsContentBelow = false
   @State private var restingBackgroundColor = Color.white.opacity(0.75)
-  @State private var useGlassWhenResting = true
   @State private var scaleWhenLifted = false
 
   @State private var offset: CGSize = .zero
