@@ -30,9 +30,6 @@ struct LiquidLensView: UIViewRepresentable {
   /// The color the background should be when the lens is in its "Resting" state.
   let restingBackgroundColor: Color
 
-  /// Unclear what this does at the moment. AFAICT, this is having no effect.
-  let useGlassWhenResting: Bool
-
   func makeUIView(context: Context) -> some UIView {
     let _UILiquidLensView = NSClassFromString("_UILiquidLensView") as AnyObject as? NSObjectProtocol
     let allocSelector = NSSelectorFromString("alloc")
@@ -48,22 +45,20 @@ struct LiquidLensView: UIViewRepresentable {
     let lens = instance as! UIView
     lens.backgroundColor = .clear
 
-    let setLifted = NSSelectorFromString("setLifted:")
-    callObjcBoolMethod(lens, setLifted, false)
+    let setLifted = NSSelectorFromString("setLifted:animated:alongsideAnimations:completion:")
+    callSetLiftedSelector(lens, setLifted, lifted: isLifted, animated: true)
 
     return lens
   }
 
   func updateUIView(_ uiView: UIViewType, context: Context) {
-    let setLifted = NSSelectorFromString("setLifted:")
+    let setLifted = NSSelectorFromString("setLifted:animated:alongsideAnimations:completion:")
     let setWarpsContentBelow = NSSelectorFromString("setWarpsContentBelow:")
-    let setUseGlassWhenResting = NSSelectorFromString("setUseGlassWhenResting:")
     let updateRestingBackgroundView = NSSelectorFromString("updateRestingBackgroundView")
 
     uiView.setValue(UIColor(restingBackgroundColor), forKey: "restingBackgroundColor")
     callObjcBoolMethod(uiView, setWarpsContentBelow, warpsContentBelow)
-    callObjcBoolMethod(uiView, setLifted, isLifted)
-    callObjcBoolMethod(uiView, setUseGlassWhenResting, useGlassWhenResting)
+    callSetLiftedSelector(uiView, setLifted, lifted: isLifted, animated: true)
 
     uiView.perform(updateRestingBackgroundView)
     uiView.setNeedsLayout()
@@ -75,5 +70,19 @@ struct LiquidLensView: UIViewRepresentable {
       let function = unsafeBitCast(method, to: ObjCMethod.self)
       function(object, selector, value)
     }
+  }
+
+  private func callSetLiftedSelector(
+    _ object: AnyObject,
+    _ selector: Selector,
+    lifted: Bool,
+    animated: Bool,
+    alongsideAnimations: UnsafeRawPointer? = nil,
+    completion: UnsafeRawPointer? = nil
+  ) {
+    typealias ObjCMethod = @convention(c) (AnyObject, Selector, Bool, Bool, UnsafeRawPointer?, UnsafeRawPointer?) -> Void
+    guard let method = object.method(for: selector) else { return }
+    let function = unsafeBitCast(method, to: ObjCMethod.self)
+    function(object, selector, lifted, animated, alongsideAnimations, completion)
   }
 }

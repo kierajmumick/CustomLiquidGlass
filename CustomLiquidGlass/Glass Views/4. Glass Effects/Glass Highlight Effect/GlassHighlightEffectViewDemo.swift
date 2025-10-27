@@ -15,32 +15,6 @@ struct GlassHighlightEffectViewDemo: View {
           }
         }
         .frame(maxWidth: .infinity)
-
-        GlassHighlightEffectView(
-          ovalization: ovalization,
-          height: height,
-          curvature: curvature,
-          angle: angle,
-          spread: spread,
-          amount: amount,
-          cornerRadius: cornerRadius
-        )
-        .frame(width: 200, height: 200)
-        .offset(x: offset.width, y: offset.height)
-        .gesture(
-          DragGesture(minimumDistance: 0)
-            .onChanged { value in
-              offset = CGSize(
-                width: lastOffset.width + value.translation.width,
-                height: lastOffset.height + value.translation.height
-              )
-            }
-            .onEnded { _ in
-              lastOffset = offset
-            }
-        )
-
-
       }
       .frame(maxHeight: .infinity, alignment: .top)
       .background(.white)
@@ -97,6 +71,35 @@ struct GlassHighlightEffectViewDemo: View {
         }
         .padding(.horizontal, 24)
         .frame(maxWidth: .infinity)
+      }
+      .overlay(alignment: .top) {
+        ZStack {
+          GlassDisplacementEffectView(ovalization: ovalization, height: height, curvature: curvature, angle: 0, inputAmount: -40, blur: 2, brightness: 0, cornerRadius: cornerRadius)
+          GlassHighlightEffectView(
+            ovalization: ovalization,
+            height: height,
+            curvature: curvature,
+            angle: angle,
+            spread: spread,
+            amount: amount,
+            cornerRadius: cornerRadius
+          )
+          .blendMode(.plusLighter)
+        }
+        .frame(width: 200, height: 200)
+        .offset(x: offset.width, y: offset.height + 50)
+        .gesture(
+          DragGesture(minimumDistance: 0)
+            .onChanged { value in
+              offset = CGSize(
+                width: lastOffset.width + value.translation.width,
+                height: lastOffset.height + value.translation.height
+              )
+            }
+            .onEnded { _ in
+              lastOffset = offset
+            }
+        )
       }
     }
   }
